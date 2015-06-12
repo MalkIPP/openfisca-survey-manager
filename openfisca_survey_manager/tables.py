@@ -141,9 +141,9 @@ class Table(object):
         overwrite = kwargs.pop('overwrite')
         clean = kwargs.pop("clean")
         if not overwrite:
-            store = pandas.HDFStore(self.survey.hdf5_file_path)
-            if self.name in store:
-                log.info('Exiting without overwriting {} in '.format(self.name, self.survey.hdf5_file_path))
+            store = pandas.HDFStore(self.survey.hdf5_file_path) if os.path.isfile(self.survey.hdf5_file_path) else None
+            if store and self.name in store:
+                log.info('Exiting without overwriting {} in {}'.format(self.name, self.survey.hdf5_file_path))
         else:
             self._check_and_log(data_file)
             data_frame = reader(data_file, **kwargs)
